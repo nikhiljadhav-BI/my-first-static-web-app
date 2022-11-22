@@ -1,0 +1,555 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8" />
+        <link rel="shortcut icon" href="/icon.PNG" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        <title> Chat Bot</title> 
+        <!-- This styling is for the canvas demonstration purposes. It is recommended 
+    that style is moved to separate file for organization in larger projects -->
+        <script src="https://cdn.botframework.com/botframework-webchat/4.4.1/webchat.js"></script>
+        
+        <script
+        src="https://unpkg.com/@azure/storage-blob@10.3.0/browser/azure-storage.blob.min.js"
+        integrity="sha384-fsfhtLyVQo3L3Bh73qgQoRR328xEeXnRGdoi53kjo1uectCfAHFfavrBBN2Nkbdf"
+        crossorigin="anonymous"
+        ></script>
+
+
+        <style>
+            div.image::before {
+            content:url(placehold.it/350x150);
+            }​
+           html,
+            body {
+                
+                background-color: #ffffff;
+                height: 100%;
+                
+            }
+
+            .css-eycyw2 {
+                background-color: #FAF9F8; 
+            }
+
+            .main{
+                background-color: #ffffff;
+                margin: 15px;
+            }
+            .css-eycyw2 .main {
+                border-top: none;
+            }
+
+            .css-1vieo9r {
+                background-color: #ffffff;
+            }
+
+            .css-o3xlyv {
+                background-color: #ffffff;
+                font-family: Segoe UI;
+                font-size: 14px;
+                line-height: 20px;
+            }
+
+            .from-user .css-o3xlyv {
+                color: #F1F0F0;
+                background-color: #0078D4;
+            }
+           
+            h1 {
+                display: table-cell;
+                vertical-align: middle;
+                padding: 0px 0px 0px 0px;
+                color:#1b387c;
+                font-family: Segoe UI;
+                font-size: 18px;
+                line-height: 21px;
+                font-weight: 500;
+                position: fixed;
+                left:calc(100% - 400px);
+                top:10px;
+            }
+            #chatbutton {
+            position: fixed;
+            left:calc(100% - 80px);
+            top:calc(100% - 122px);
+            width: 70px;
+            height: 70px;
+            background-color: #eee;
+            border-radius: 50%;
+            }
+            #Available {
+                display: table-cell;
+                vertical-align: bottom;
+                padding: 0px 0px 0px 0px;
+                color:#0b1427;
+                font-family: Segoe UI;
+                font-size: 8px;
+                line-height: 21px;
+                font-weight: 500;
+                height: 90px;
+                left: calc(100% - 400px);
+                overflow: hidden;
+                position: fixed;
+                top: 30px;
+                width: 368px;
+            }
+            #summary {
+                display: table-cell;
+                vertical-align: bottom;
+                padding: 0px 0px 0px 0px;
+                color:#030814;
+                font-family: Segoe UI;
+                font-size: 10px;
+                line-height: 15px;
+                font-weight: 500;
+                position: fixed;
+                height: 480px;
+                top:50px;
+                left: calc(100% - 445px);
+                width: 368px;   
+                
+            }
+            #heading {
+                
+                background-color: #bfe1fc;
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+                height: 90px;
+                left: calc(100% - 450px);
+                overflow: hidden;
+                position: fixed;
+                top: 10px;
+                width: 400px;
+            }
+            #logo {
+                height: 50px;
+                left: calc(100% - 450px);
+                overflow: hidden;
+                position: fixed;
+                top: 10px;
+                width: 50px;
+            }
+            #close {
+            background-image: url('https://omnichannelsolutions.blob.core.windows.net/emmydocs/hevw6u.svg');
+            height: 15px;
+            left: calc(100% - 75px);
+            overflow: hidden;
+            position: fixed;
+            top: 25px;
+            width: 15px;
+            background-color: rgb(255, 255, 255);
+            border:none;
+            /* border-radius: 50%; */
+            }
+            /* .heading img {
+            float: left;
+            width: 10px;
+            height: 10px;
+            background: #555;
+            }
+            .heading h1 {
+            position: relative;
+            top: 18px;
+            left: 10px;
+            } */
+            h1{text-align: center;}
+            #chatwindow {
+                
+                border-radius: 20px;
+                box-shadow: 0 0 8px rgba(173, 35, 35, 0.2);
+                height: calc(80% - 130px);
+                left: calc(100% - 450px);
+                overflow: hidden;
+                position: fixed;
+                top: 10px;
+                width: 368px;
+            }
+
+            .main {
+                margin: 18px;
+                border-radius: 4px;
+            }
+
+            div[role="form"]{
+                background-color: rgb(255, 255, 255);
+            } 
+            .css-1fyy09s{
+                background-color: rgb(255, 255, 255);
+            }       
+            #webchat {
+                 
+                border-bottom-left-radius: 4px;
+                border-bottom-right-radius: 4px;
+                height: calc(80% - 130px);
+                left: calc(100% - 450px);
+                overflow: hidden;
+                position: fixed;
+                top: 90px;
+                width: 400px;
+            }
+            /* .webchat__send-box .webchat--css-dlslh-17dm1da .webchat--css-dlslh-1bfjcn2 .webchat--css-dlslh-6su6fj {
+    text-align: center;
+    line-height: 1.3;
+    font-size: 14px;
+    margin-right: 5px;
+    font-weight: bold;
+    font-family: "AvenirNextLTW02-Demi", arial, sans-serif;
+} */
+/* .wc-typing {
+        background-image: url('data:image/gif;base64,R0lGODlhQAAYAPYBAOzv8evu8Ort7+fq7Ons7ujr7eXo6uTn6ebp6+Xn6ebo6uzu8OPm6OTm6OPm5+Tn6N/i4+Ll59/i5N7h4+Hk5uDj5evu7+Hk5d/h49PV18PFx7/BwsfJysXHyMLExdja3Nfa28vNz72/wL7Awc/S08TGyMDCw9TW2NbY2t3g4trd39bZ2szO0M7Q0dnb3djb3Nvd39ve4Nnc3dze4Nrc3t7g4tzf4dXX2d3f4d7h4tnc3tve383P0MrMzs7Q0sjKzNLU1s/R08jKy9DT1NfZ293g4efp68bIyby+v9bZ27q8vdHT1c7R0uvt78nLzM/R0tjb3ens7bO0tbS2t7GztK+xsrW3uK6vsLe4utfa3L/Awtzf4MnLzamqq5WWl66wsbm7vNrd3uXo6a2ur6yurp2en6KjpKusrZ+goKeoqers7urt7peXmIGBgYSEhHx8fJmamqipqnZ2doqLi8XHyY2NjpGSkpOUlJiYmZOTlI+QkJqbm4eIiJucnIuMjP///yH/C05FVFNDQVBFMi4wAwEAAAAh/wtYTVAgRGF0YVhNUDw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MEY0RUJCMDNENkM4MTFFNkI5RENGRDgzMjAyQjU3QzUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MEY0RUJCMDRENkM4MTFFNkI5RENGRDgzMjAyQjU3QzUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowRjRFQkIwMUQ2QzgxMUU2QjlEQ0ZEODMyMDJCNTdDNSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowRjRFQkIwMkQ2QzgxMUU2QjlEQ0ZEODMyMDJCNTdDNSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTDwsHAv769vLu6ubi3trW0s7KxsK+urayrqqmop6alpKOioaCfnp2cm5qZmJeWlZSTkpGQj46NjIuKiYiHhoWEg4KBgH9+fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjYmFgX15dXFtaWVhXVlVUU1JRUE9OTUxLSklIR0ZFRENCQUA/Pj08Ozo5ODc2NTQzMjEwLy4tLCsqKSgnJiUkIyIhIB8eHRwbGhkYFxYVFBMSERAPDg0MCwoJCAcGBQQDAgEAACH5BAUOAAEAIf4YT3B0aW1pemVkIHdpdGggZXpnaWYuY29tACwAAAAAQAAYAAACJoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gvH8kzX9o3n+l0AACH5BAUHAAAALD4ACQACAAYAAAIERI5oBQAh+QQFBwAOACwsAAcAFAAJAAAEJRDISZetmJQ9uhcZyClGSY4hYjbHKqYs06ooLLuBPeM6b2u1SgQAIfkEBQcADQAsGAAHACUACQAABlFAgHAYKBqJyKRS+ahMchKnoSBYWq0Mp+rzimEiiUH1SjaCd64VioaTEo5lbA3GvaWjCmpcfnl27TZ4ent8Mmo6KW6EhXSIEGCDi4VZCG+SSUEAIfkEBQcABgAsEQAHABcACQAAB0aAAIKDAoSGh4RELD8sHwkBiJEoIUKVPSAHkJGJQZaWNQSbnJ6VMAOigzI8pDwxp6gCKUOMnhKFsAgvi59GuKkZPhkTBb6BACH5BAUHAAQALA8ABwANAAkAAAYsQICwYAgMj0LWZokSIAedpTSDREmvxaHyyjy2uN2hCqwZVLmqp2DF0bAkzyAAIfkEBRUABQAsDgAHAAoACQAABidAgDBgGAyHH5NoyUAunxuEcANdkqbVJTa7hZ6EkFFVcAx5ShmCMAgAIfkEBQcAAAAsLAAHABAACQAABC0QyClXpZWUwbsOU/AhSWmQGyiOB+Mq3rJ6zosKM22n+d2YqQzvBOOFcMOgJAIAIfkEBQcAAwAsIQAHABsACQAAB0yAAIKDAgGEh4iJKStLGTARBYmShDgoJEyYNBSRk4ouQJiZNQeFnYc5II2hJzMOBKanH6qiDK+wlBlBqxMGhreDE6m0Ub+xjBi9xYKBACH5BAUHAAYALB0ABwAQAAkAAAc+gACCAgoFg4eIGSNKSj0MiIckjJNHB5AAEiaTkzcBkC8im4w8BJ+hoj6lkBqiSC+XAUmnowOwsT8bJSiGl4EAIfkEBQcAAgAsHAAHAAsACQAABy2AAIIGDIOGRVhXijeHVYqPjIIej5QBglKUjweXmYoIkp0ClpyVhghCiRoUhoEAIfkEBRUAAgAsGwAHAAoACQAAByyAAIKCB4ODMlNkijKHY4qPMIJgj49ggpSUAQBXmIqSnRuEVJgMhiWJJQmCgQAh+QQFBwAAACwxAAcADQAJAAAEJRDICQKdgQyktrBS5h0G91WfSXYaWqjrK8rx6LL1cpf8GaY2SQQAIfkEBQcABgAsKwAHABMACQAABzyAAIKDBISGhzwbSB4ZCIeIIouLQI6PgjcmkpI4AZYDJCOak4WWQ1qiJi8Cnh8eqBiel6GbpLEgHIycsYEAIfkEBQcAAgAsKQAHAA0ACQAABzyAAIIBEhQBg4gBXHh1dWUZiQCLjZQriWWUlF2Hghh2mY14A4MVn6B7UYhmoHVSnJ13maiROFdse1YMiYEAIfkEBQcAAwAsDgAHACUACQAAB2OAA4KCBYOGh4iIETBRAI6PIIYNiZSHKWxymVUCkIcmlaAHbpmkcQCVQ6CUUqStKaeJR6qJcK2kdI6zugNltplOjh6IN7uGJr5vB44YngTFgwKYrRuPwR4dAwLPklNzbV4sj4EAIfkEBQcACgAsCwAHACcACQAAB2qAAIKDBAEACoiJiouMiQ4qBYSCLiw/LCsHho2bjF6KhpM9lpY3D4KcnAmMXaGjozECh6izihMFM5Wul5G0vQodBDY8uruyvqhcARVAxDgWxscbjQatrwOnx4mem8EZLUApkdDZClKJPIKBACH5BAUHAAoALAQABwASAAkAAAdCgACCCwEWhoOIiQMRKTQxFQYCioiMMi8fMJAEk5sQKpegjIWTEzqhNhcIo4qlpxSqnBWZroSxpi4zr5KcnTWei5yBACH5BAUHAAYALAAABwAQAAkAAAMRCLrc/rCIEIe9tOKpd/dfqCUAIfkEBRUAAQAsAAAIAAcACAAAAgaEj6nL7VAAIfkEBQcABQAsGwAHAAoACQAABzSAAIICDAODgyxSX1UeDYiLkEoIABJUkJBDADeXkZqci0eUU58ogkBVlxoEgzobVkpLqwCBACH5BAUHAAMALBMABwARAAkAAAdPgACCgwIEhoSIhTJBRx08RBSFiRQvTBoimI8VkoQ4GU4bmKFLMAqTS42iji8RAYgwqCOqQS4Mpz2hmUAxCJMqQ6mrrYmuOShPLSc2Bq6EgQAh+QQFBwAJACwHAAcAGgAJAAAHWIAAgoMBhYaEiImDFTNZRC44FAiHiomMK0A+mTaSlJWCEUVQJySaNzoYDAWfiJIfGUymkBEDrIuusLI1tJ6VDrs3pUMoKhANBLa3W4+lLym8ycqczwer0YEAIfkEBQcACwAsAAAHABYACQAABS4gIAbkaJ5oVF3HIJTpqWJ048bpVKsFjM+7xA03WgV7xOIRmUQ4jKxh0/V0+oghACH5BAUVAAEALAAABwAKAAkAAAIIhI+py+0PYQEAIfkEBQcABQAsJgAHAAwACQAAB0qAAIIEYhQGAYODN1R1bnpXN4iCGV98bZd+ZxmIFx54l6B4SodhYI2gbXZUOQAwSnqoqVMYrSV9sWUbA5NYp7IwiRgaZndmHhWDgQAh+QQFBwAHACwZAAcAGAAJAAAHboAAgoMEhYYBhImJMUMcGyNII0JANQWKimEkHUpVaWlUSkdLOFGXgxIoIY9dZWZnWCYsRBGmgikZPyJSnmhdU1pOJxKIpkW4kLy+kjfDtRWpHlhnvWOwPB8NxMXHVGevyxBqtacgQSFcTsFQtOOBACH5BAUHAAMALAkABwAgAAkAAAdtgACCgwKFhoSIiYoFFWEZPi1PJDczEQSLmIONQCElGyYckZUFmZg2KEwcHkqsPUsfEwYBpYkRMDc8R59gHkJBKzgNh7SCtriqvL2/KQzDxGIpK0FOq0jKsLLPiConLLrXNs3atS6UqDQS2eMAgQAh+QQFBwALACwAAAcAGQAJAAAHUIAAAYNNhIKHiImIDDk6ICoSCQSKlIg1MjcnmRAHk5WKFTErmqQURoafghA0KKStoQKplpCuMRUKsbKqW0S1EQOoshispQa5urtFMxO/x8iBACH5BAUHAAIALAAABwALAAkAAAIJhI+py+3xolwFACH5BAUHAAEALAAACQABAAUAAAIChF0AOw==');
+        background-repeat: no-repeat;
+        height: 20px;
+        width: 64px;
+    } */
+            
+          </style>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+      <title>Home page</title>
+
+    <!--script type="text/javascript">
+    function changeDivContent(value) { 
+        //document.getElementById("content").innerHTML = "This is page :" + value;
+        document.getElementById("content").load("1.html");
+    };
+  </script-->
+
+
+     <script type="text/javascript">
+       
+
+       function myFn(file){
+          $("#content").load(file);    
+          
+      //console.log("#################")
+      //console.log(document.getElementById("list").value)
+      //console.log("#################")
+     
+       }
+
+         $(document).ready(function(){
+        
+           $("#1").click(function(){
+            //console.log("aaa")
+             myFn("./1.html")
+       
+            });
+           $("#2").click(function(){
+            //console.log("bbb")
+
+            myFn("./2.html")
+           });
+           $("#3").click(function(){
+           // console.log("ccc")
+
+            myFn("./3.html")
+           });
+
+          
+        });
+     </script>
+    
+
+</head>
+<body>
+ <nav class="navbar navbar-expand-lg bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled">Disabled</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+<div id="content">
+    <h2>This is Home page</h2>
+<h2> Go to: </h2>
+
+      <ul id="list">
+        <button><a onclick="function_2('1')">Page 1</a></button>
+         <button><a onclick="function_2('2')">Page 2</a></button>
+          <button><a onclick="function_2('3')">Page 3</a></button>
+       
+      </ul>
+</div>
+ 
+ <div id="chatwindow"  style="display:none;">
+       
+            <div id="heading"  style="display:none;">
+                <!-- <img src="icon-wout.svg" alt="Emmy" /> -->
+                <input id="close" type="button" name="answer" onclick="closeDiv()" />
+                <!-- <img id = 'close' src="https://cdn-icons-png.flaticon.com/512/786/786263.png" alt="Close"> -->
+                <img id = 'logo' src="https://bi-heartfailure.ebm.filament.ai/_img/icon-wout.svg" alt="chatbot">
+                <h1>Chatbot</h1>
+                <p id="Available"  style="display:none;">Available</p>
+                <p id="summary"  style="display:none;">Hi, I’m Chatbot the <a href="https://www.ema.europa.eu/en/documents/product-information/jardiance-epar-product-information_en.pdf">empagliflozin</a> chatbot. All information comes from the <a href="https://www.ema.europa.eu/en/documents/product-information/jardiance-epar-product-information_en.pdf">SmPC</a>, you can see a full list of references here.</p>
+            </div>
+            <div id="webchat"  style="display:none;">
+            </div>
+        </div>
+        <input id="chatbutton" type="button" name="answer" onclick="showDiv()" />
+      <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+      <script>
+          function showDiv() {
+                //console.log('clicked');
+                document.getElementById('chatwindow').style.display = "initial";
+                document.getElementById('heading').style.display = "initial";
+                document.getElementById('Available').style.display = "initial";
+                document.getElementById('summary').style.display = "initial";
+                document.getElementById('webchat').style.display = "initial";
+            }
+            function closeDiv() {
+                //console.log('clicked');
+                document.getElementById('chatwindow').style.display = "none";
+                document.getElementById('heading').style.display = "none";
+                document.getElementById('Available').style.display = "none";
+                document.getElementById('summary').style.display = "none";
+                document.getElementById('webchat').style.display = "none";
+            }
+            showDiv()
+
+            // import typingBackgroundImage from './typingIndicator';
+            const styleOptions = {
+            botAvatarInitials: 'MI',
+            accent: '#00809d',
+            botAvatarBackgroundColor: "#FFFFFF",
+            botAvatarImage: 'https://bi-heartfailure.ebm.filament.ai/_img/icon-with.svg',
+            userAvatarImage: 'https://bi-heartfailure.ebm.filament.ai/_img/icon-with.svg',
+            backgroundColor: '#FFFFFF',
+            suggestedActionBackgroundColor: '#000000',
+            suggestedActionBorder: 10,
+            suggestedActionBorderRadius: 4,
+            suggestedActionBorderStyle: 'solid',
+            suggestedActionBorderWidth: 1,
+            suggestedActionHeight: 24,
+            suggestedActionLayout: 'flow', // either "carousel" or "stacked" or "flow"
+            timestampColor: '#000000',
+            timestampFormat: 'absolute timestamp',
+            suggestedActionBackgroundColorOnHover: '#6082B6',
+            suggestedActionBackgroundColorOnActive: '#6082B6',
+            suggestedActionBackgroundColor: '#36454F',
+            suggestedActionTextColor: '#FFFFFF',
+            suggestedActionBackgroundColorOnFocus: '#6082B6',
+            suggestedActionBackgroundColorOnDisabled: '#6082B6',
+            // typingAnimationDuration: 3000,
+            // typingAnimationHeight: 20,
+            // typingAnimationWidth: 64,
+            // hideUploadButton: true,
+            // internalLiveRegionFadeAfter: 100000
+            typingAnimationBackgroundImage: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAUACgDASIAAhEBAxEB/8QAGgABAQACAwAAAAAAAAAAAAAAAAYCBwMFCP/EACsQAAECBQIEBQUAAAAAAAAAAAECAwAEBQYRBxITIjFBMlFhccFScoGh8f/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD0lctx023JVD9UeKOIcNoSNylkdcCMbauSmXHLOPUx8r4ZAcQtO1SM9Mj5iO1gtWo1syc7S2zMKYSptbIPNgnII8/5HBpRZ9RpaKjNVVCpUzLPAQ1nmA7qPl6fmAondRrcaqhkVTiiQrYXgglsH7vnpHc3DcNNoEimaqT4Q2s4bCRuUs+gEaLd05uNFVMmiS3o3YEwFDhlP1Z7e3WLzUuzahUKHRk0zM07TmeApvOFLGEjcM9+Xp6wFnbN0Uu5GnF0x4qW1je2tO1Sc9Djy9oRD6QWlU6PPzVSqjRlgtksttKPMcqBKiO3h/cIDacIQgEIQgEIQgP/2Q==',
+            typingAnimationDuration: 100000,
+            typingAnimationHeight: 200,
+            typingAnimationWidth: 640,
+            bubbleBackground: '#e0eeff',
+            bubbleFromUserBackground: '#7cc0d8',
+
+        };
+        
+          var flag=0;
+          function function_2(value_1){
+            // element id="btnVal" value="value"
+            //document.getElementById("btnval").value= value_1
+            flag=value_1;
+            function_3()
+           // console.log("flag value in function")
+            //console.log(flag)
+          }
+
+          
+      
+           
+       
+        
+
+            // Add your BOT ID below
+            var BOT_ID = "0ebfe9cf-83ba-483a-9d28-89c52fa516d2"; 
+                          
+
+            var theURL = "https://powerva.microsoft.com/api/botmanagement/v1/directline/directlinetoken?botId=" + BOT_ID;
+            
+             const store = window.WebChat.createStore(
+
+               {}, ({ dispatch }) => next => action => {
+                   //console.log(dispatch)
+                   //console.log(next)
+                   //console.log(action)
+                   if (action.type === 'DIRECT_LINE/INCOMING_ACTIVITY') {
+
+                   // Get activity from action
+                      const { activity } = action.payload;
+                     // console.log(activity)
+                     // console.log("!!!!!!!!!!!!!!!")
+
+                      
+                      if(activity.text==="Page 1"){
+                       //   console.log("1-inside the chatbot")
+                          myFn("./1.html");
+                      }
+
+                      if(activity.text==="Page 2"){
+                       //   console.log("2-inside the chatbot")
+                          myFn("./2.html");
+                      }
+
+                      if(activity.text==="Page 3"){
+                        //  console.log("3-inside the chatbot")
+                          myFn("./3.html");
+                      }
+
+                      
+                          //document.getElementById("btnval").onclick = myFn("1.html") ;
+                     //console.log("#################")
+                     //console.log(document.getElementById("btnval").value)
+                     //console.log("#################")
+                }    
+                
+                 //console.log("not in if statement")
+                //console.log(flag)
+                //console.log(action.type)
+                   if (action.type === "DIRECT_LINE/CONNECT_FULFILLED") {
+                      dispatch({
+                          meta: {
+                               method: "keyboard",
+                           },
+                           payload: {
+                               activity: {
+                                     channelData: {
+                                          postBack: true,
+                                     },
+                                      name: 'startConversation',
+                                      type: "event"
+                                      
+                                 },
+                            },
+                            type: "DIRECT_LINE/POST_ACTIVITY",
+                       }); 
+                   // console.log("@@@@@@in if statement")
+                //console.log(flag)
+                       
+                 if(flag==='1'){
+                       dispatch({
+                          meta: {
+                               method: "keyboard",
+                           },
+                           payload: {
+                               activity: {
+                                     channelData: {
+                                          postBack: true,
+                                     },
+                                      name: 'selectPage1',
+                                      type: "message",
+                                      text:  "Page 1"
+                                      
+                                 },
+                            },
+                            type: "DIRECT_LINE/POST_ACTIVITY",
+                       }); 
+                    }
+
+                    if(flag==='2'){
+                       dispatch({
+                          meta: {
+                               method: "keyboard",
+                           },
+                           payload: {
+                               activity: {
+                                     channelData: {
+                                          postBack: true,
+                                     },
+                                      name: 'selectPage2',
+                                      type: "message",
+                                      text:  "Page 2"
+                                      
+                                 },
+                            },
+                            type: "DIRECT_LINE/POST_ACTIVITY",
+                       }); 
+                    }
+
+                    if(flag==='3'){
+                       dispatch({
+                          meta: {
+                               method: "keyboard",
+                           },
+                           payload: {
+                               activity: {
+                                     channelData: {
+                                          postBack: true,
+                                     },
+                                      name: 'selectPage3',
+                                      type: "message",
+                                      text:  "Page 3"
+                                      
+                                 },
+                            },
+                            type: "DIRECT_LINE/POST_ACTIVITY",
+                       }); 
+                    }
+
+                 }
+                 return next(action);
+              }
+           );
+
+         function function_3(){
+           fetch(theURL)
+           
+                .then(response => response.json())
+              
+                .then(conversationInfo => {
+                   // console.log(conversationInfo)
+                    window.WebChat.renderWebChat(
+                        {   
+                           
+                            directLine: window.WebChat.createDirectLine({
+                                token: conversationInfo.token,
+                            }),
+                            store: store,
+                            styleOptions: styleOptions,
+                            sendTypingIndicator: true
+                        },
+                        document.getElementById('webchat')
+                    );
+                })
+                .catch(err => console.error("An error occurred: " + err));
+        }
+        function_3()
+       
+        </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</body>
+</html>
