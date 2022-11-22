@@ -1,17 +1,731 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Vanilla JavaScript App</title>
+
+<meta charset="utf-8" />
+        <link rel="shortcut icon" href="/icon.PNG" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        <title> Chat Bot</title> 
+        <!-- This styling is for the canvas demonstration purposes. It is recommended 
+    that style is moved to separate file for organization in larger projects -->
+        <script src="https://cdn.botframework.com/botframework-webchat/4.4.1/webchat.js"></script>
+        
+        <script
+        src="https://unpkg.com/@azure/storage-blob@10.3.0/browser/azure-storage.blob.min.js"
+        integrity="sha384-fsfhtLyVQo3L3Bh73qgQoRR328xEeXnRGdoi53kjo1uectCfAHFfavrBBN2Nkbdf"
+        crossorigin="anonymous"
+        ></script>
+
+
+        <style>
+            div.image::before {
+            content:url(placehold.it/350x150);
+            }​
+           html,
+            body {
+                
+                background-color: #ffffff;
+                height: 100%;
+                
+            }
+
+            .css-eycyw2 {
+                background-color: #FAF9F8; 
+            }
+
+            .main{
+                background-color: #ffffff;
+                margin: 15px;
+            }
+            .css-eycyw2 .main {
+                border-top: none;
+            }
+
+            .css-1vieo9r {
+                background-color: #ffffff;
+            }
+
+            .css-o3xlyv {
+                background-color: #ffffff;
+                font-family: Segoe UI;
+                font-size: 14px;
+                line-height: 20px;
+            }
+
+            .from-user .css-o3xlyv {
+                color: #F1F0F0;
+                background-color: #0078D4;
+            }
+           
+            h1 {
+                display: table-cell;
+                vertical-align: middle;
+                padding: 0px 0px 0px 0px;
+                color:#1b387c;
+                font-family: Segoe UI;
+                font-size: 18px;
+                line-height: 21px;
+                font-weight: 500;
+                position: fixed;
+                left:calc(100% - 400px);
+                top:65px;
+            }
+            #chatbutton {
+            position: fixed;
+            left:calc(100% - 80px);
+            top:calc(100% - 122px);
+            width: 70px;
+            height: 70px;
+            background-color: #eee;
+            border-radius: 50%;
+            }
+            #Available {
+                display: table-cell;
+                vertical-align: bottom;
+                padding: 0px 0px 0px 0px;
+                color:#0b1427;
+                font-family: Segoe UI;
+                font-size: 8px;
+                line-height: 21px;
+                font-weight: 500;
+                height: 90px;
+                left: calc(100% - 400px);
+                overflow: hidden;
+                position: fixed;
+                top: 80px;
+                width: 368px;
+            }
+            #summary {
+                display: table-cell;
+                vertical-align: bottom;
+                padding: 0px 0px 0px 0px;
+                color:#030814;
+                font-family: Segoe UI;
+                font-size: 10px;
+                line-height: 15px;
+                font-weight: 500;
+                position: fixed;
+                height: 480px;
+                top:110px;
+                left: calc(100% - 445px);
+                width: 368px;   
+                
+            }
+            #heading {
+                
+                background-color: #bfe1fc;
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+                height: 90px;
+                left: calc(100% - 450px);
+                overflow: hidden;
+                position: fixed;
+                top: 60px;
+                width: 400px;
+            }
+            #logo {
+                height: 50px;
+                left: calc(100% - 450px);
+                overflow: hidden;
+                position: fixed;
+                top: 60px;
+                width: 50px;
+            }
+            #close {
+            background-image: url('https://omnichannelsolutions.blob.core.windows.net/emmydocs/hevw6u.svg');
+            height: 15px;
+            left: calc(100% - 75px);
+            overflow: hidden;
+            position: fixed;
+            top: 75px;
+            width: 15px;
+            background-color: rgb(255, 255, 255);
+            border:none;
+            /* border-radius: 50%; */
+            }
+            h1{text-align: center;}
+            #chatwindow {
+                
+                border-radius: 20px;
+                box-shadow: 0 0 8px rgba(173, 35, 35, 0.2);
+                height: calc(80% - 130px);
+                left: calc(100% - 450px);
+                overflow: hidden;
+                position: fixed;
+                top: 60px;
+                width: 368px;
+            }
+
+            .main {
+                margin: 18px;
+                border-radius: 4px;
+            }
+
+            div[role="form"]{
+                background-color: rgb(255, 255, 255);
+            } 
+            .css-1fyy09s{
+                background-color: rgb(255, 255, 255);
+            }       
+            #webchat {
+                 
+                border-bottom-left-radius: 4px;
+                border-bottom-right-radius: 4px;
+                height: calc(80% - 10px);
+                left: calc(100% - 450px);
+                overflow: hidden;
+                position: fixed;
+                top: 140px;
+                width: 400px;
+                box-shadow: 0 0 8px rgb(173 35 35 / 20%);
+            }
+            .webchat__send-box__main {
+                display: none!important;
+             }
+             .menu_content button:hover{
+              color: #eee;
+              background-color: #0b1427;
+             }
+             .buttonDefault:hover{
+              color: #eee;
+              background-color: #0b1427;
+             }
+            
+          </style>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+      <title>Home page</title>
+
+    <!--script type="text/javascript">
+    function changeDivContent(value) { 
+        //document.getElementById("content").innerHTML = "This is page :" + value;
+        document.getElementById("content").load("1.html");
+    };
+  </script-->
+
+
+     <script type="text/javascript">
+
+       function myFn(file){
+        console.log(file)
+          $("#content").load(file);  
+      //console.log("#################")
+      //console.log(document.getElementById("list").value)
+      //console.log("#################")
+     
+       }
+
+        //  $(document).ready(function(){
+        
+        //    $("#1").click(function(){
+        //      myFn("./1.html")   
+        //     });
+
+        //    $("#2").click(function(){
+        //    myFn("./2.html")
+        //    });
+
+        //    $("#3").click(function(){
+        //    myFn("./3.html")
+        //    });
+
+        //    $("#hp").click(function(){
+        //      myFn("./hp.html")
+        //    });
+        // });
+     </script>
+    
+
 </head>
-
 <body>
-  <main>
-    <h1>Vanilla JavaScript App</h1>
-  </main>
-</body>
+ <nav class="navbar navbar-expand-lg bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a style="cursor: pointer;" class="nav-link active" aria-current="page" onclick="function_2('Main menu')">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://xofigo.healthbot.cloud/">Link</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Menu
+          </a>
+          <ul class="dropdown-menu">
+              <li class="dropdown-item">
+                <button class="buttonDefault" type="button"><a onclick="function_2('1')">Page 1</a></button>
+                <ul>
+                  <li class="dropdown-item" style="font-size: small;">
+                    <button class="buttonDefault"><a onclick="function_2('1.1')">Page 1.1</a></button>
+                  </li>
+                  <li class="dropdown-item" style="font-size: small;">
+                    <button class="buttonDefault"><a onclick="function_2('1.2')">Page 1.2</a></button>
+                  </li>
+                </ul>
+              </li>
+              <li class="dropdown-item">
+                <button class="buttonDefault"><a onclick="function_2('2')">Page 2</a></button>
+                <ul>
+                  <li class="dropdown-item" style="font-size: small;">
+                    <button class="buttonDefault"><a onclick="function_2('2.1')">Page 2.1</a></button>
+                  </li>
+                  <li class="dropdown-item" style="font-size: small;">
+                    <button class="buttonDefault"><a onclick="function_2('2.2')">Page 2.2</a></button>
+                  </li>
+                </ul>
+              </li>
+           
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled">Disabled</a>
+        </li>
+      </ul>
+      <!-- <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Refresh</button>
+      </form> -->
+    </div>
+  </div>
+</nav>
+<div style="margin-left: 10px !important;" id="content" class="menu_content">
+    <h2>This is Home page</h2>
+<h2> Go to: </h2>
 
+      <!-- <ul>
+          <li > -->
+            <button><a onclick="function_2('1')">Page 1</a></button>
+            <!-- <ul>
+              <li style="margin: 5px; font-size: small;">
+                <button class="buttonDefault"><a onclick="function_2('1.1')">Page 1.1</a></button>
+              </li>
+              <li style="margin: 5px; font-size: small;">
+                <button class="buttonDefault"><a onclick="function_2('1.2')">Page 1.2</a></button>
+              </li>
+            </ul> -->
+          <!-- </li>
+          <li > -->
+            <button><a onclick="function_2('2')">Page 2</a></button>
+            <!-- <ul>
+              <li style="margin: 5px; font-size: small;">
+                <button class="buttonDefault"><a onclick="function_2('2.1')">Page 2.1</a></button>
+              </li>
+              <li style="margin: 5px; font-size: small;">
+                <button class="buttonDefault"><a onclick="function_2('2.2')">Page 2.2</a></button>
+              </li>
+            </ul> -->
+          <!-- </li>
+       
+      </ul> -->
+</div>
+
+<div style="margin-left: 10px;">
+    <p>Last page visited was: <span style="font-weight: bold;" id="lastTopic"></span> </p>
+
+    <p>Close the browser tab (or window), and try again, and the last page visited will continue to display (is not reset).</p>
+</div>
+ 
+ <div id="chatwindow"  style="display:none;">
+       
+            <div id="heading"  style="display:none;">
+                <!-- <img src="icon-wout.svg" alt="Emmy" /> -->
+                <input id="close" type="button" name="answer" onclick="closeDiv()" />
+                <!-- <img id = 'close' src="https://cdn-icons-png.flaticon.com/512/786/786263.png" alt="Close"> -->
+                <img id = 'logo' src="https://bi-heartfailure.ebm.filament.ai/_img/icon-wout.svg" alt="chatbot">
+                <h1>iMETA PoC</h1>
+                <p id="Available"  style="display:none;">Available</p>
+                <p id="summary"  style="display:none;">Hi, I’m Test the <a href="https://xofigo.healthbot.cloud/">xofigo</a> chatbot. All information comes from the <a href="https://xofigo.healthbot.cloud/">reference bot</a></p>
+            </div>
+            <div id="webchat"  style="display:none;">
+            </div>
+        </div>
+        <!-- <input id="chatbutton" type="button" name="answer" onclick="showDiv()" /> -->
+      <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+      <script>
+          function showDiv() {
+                document.getElementById("lastTopic").innerHTML = localStorage.lastTopic;
+                //console.log('clicked');
+                document.getElementById('chatwindow').style.display = "initial";
+                document.getElementById('heading').style.display = "initial";
+                document.getElementById('Available').style.display = "initial";
+                document.getElementById('summary').style.display = "initial";
+                document.getElementById('webchat').style.display = "initial";
+            }
+            function closeDiv() {
+                //console.log('clicked');
+                document.getElementById('chatwindow').style.display = "none";
+                document.getElementById('heading').style.display = "none";
+                document.getElementById('Available').style.display = "none";
+                document.getElementById('summary').style.display = "none";
+                document.getElementById('webchat').style.display = "none";
+            }
+            showDiv()
+
+            // import typingBackgroundImage from './typingIndicator';
+            const styleOptions = {
+            botAvatarInitials: 'MI',
+            accent: '#00809d',
+            botAvatarBackgroundColor: "#FFFFFF",
+            botAvatarImage: 'https://bi-heartfailure.ebm.filament.ai/_img/icon-with.svg',
+            userAvatarImage: 'https://bi-heartfailure.ebm.filament.ai/_img/icon-with.svg',
+            backgroundColor: '#FFFFFF',
+            suggestedActionBackgroundColor: '#000000',
+            suggestedActionBorder: 10,
+            suggestedActionBorderRadius: 4,
+            suggestedActionBorderStyle: 'solid',
+            suggestedActionBorderWidth: 1,
+            suggestedActionHeight: 24,
+            suggestedActionLayout: 'flow', // either "carousel" or "stacked" or "flow"
+            timestampColor: '#000000',
+            timestampFormat: 'absolute timestamp',
+            suggestedActionBackgroundColorOnHover: '#6082B6',
+            suggestedActionBackgroundColorOnActive: '#6082B6',
+            suggestedActionBackgroundColor: '#36454F',
+            suggestedActionTextColor: '#FFFFFF',
+            suggestedActionBackgroundColorOnFocus: '#6082B6',
+            suggestedActionBackgroundColorOnDisabled: '#6082B6',
+            // typingAnimationDuration: 3000,
+            // typingAnimationHeight: 20,
+            // typingAnimationWidth: 64,
+            // hideUploadButton: true,
+            // internalLiveRegionFadeAfter: 100000
+            typingAnimationBackgroundImage: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAUACgDASIAAhEBAxEB/8QAGgABAQACAwAAAAAAAAAAAAAAAAYCBwMFCP/EACsQAAECBQIEBQUAAAAAAAAAAAECAwAEBQYRBxITIjFBMlFhccFScoGh8f/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD0lctx023JVD9UeKOIcNoSNylkdcCMbauSmXHLOPUx8r4ZAcQtO1SM9Mj5iO1gtWo1syc7S2zMKYSptbIPNgnII8/5HBpRZ9RpaKjNVVCpUzLPAQ1nmA7qPl6fmAondRrcaqhkVTiiQrYXgglsH7vnpHc3DcNNoEimaqT4Q2s4bCRuUs+gEaLd05uNFVMmiS3o3YEwFDhlP1Z7e3WLzUuzahUKHRk0zM07TmeApvOFLGEjcM9+Xp6wFnbN0Uu5GnF0x4qW1je2tO1Sc9Djy9oRD6QWlU6PPzVSqjRlgtksttKPMcqBKiO3h/cIDacIQgEIQgEIQgP/2Q==',
+            typingAnimationDuration: 100000,
+            typingAnimationHeight: 200,
+            typingAnimationWidth: 640,
+            bubbleBackground: '#e0eeff',
+            bubbleFromUserBackground: '#7cc0d8',
+            DisplayMode: 'Disabled',
+            //hideSendBox: true,
+        };
+        
+          var flag=0;
+          var conv_id=0;
+          start =0;
+          function function_2(value_1){
+            // element id="btnVal" value="value"
+            //document.getElementById("btnval").value= value_1
+            flag=value_1;
+            function_3();
+           // console.log("flag value in function")
+            //console.log(flag)
+            updateLastTopic(value_1);
+          }
+          
+          function updateLastTopic(topic) {
+            if (localStorage.lastTopic) {
+              localStorage.lastTopic = topic
+            } else {
+              localStorage.lastTopic = "Main menu";
+            }
+            document.getElementById("lastTopic").innerHTML = localStorage.lastTopic;
+          }        
+
+            // Add your BOT ID below
+            var BOT_ID = "7b25ff57-dab2-4172-9c97-a01ce53c5fea"; 
+                          
+
+            var theURL = "https://powerva.microsoft.com/api/botmanagement/v1/directline/directlinetoken?botId=" + BOT_ID;
+            
+             const store = window.WebChat.createStore(
+
+               {}, ({ dispatch }) => next => action => {
+                   if (action.type === 'DIRECT_LINE/INCOMING_ACTIVITY') {
+
+                   // Get activity from action
+                      const { activity } = action.payload;
+                      if(activity.text =="Continue where you left off"){
+                          var lastTopic = localStorage.lastTopic;
+                          function_2(lastTopic);
+                          if(lastTopic != "Main menu"){
+                            lastTopic = "Page "+lastTopic;
+                            if(lastTopic==="Page 1"){
+                                myFn("./1_.html");
+                            }
+                            if(lastTopic==="Page 2"){
+                                myFn("./2_.html");
+                            }
+                            if(lastTopic==="Page 1.1"){
+                                myFn("./1_1.html");
+                            }
+                            if(lastTopic==="Page 1.2"){
+                                myFn("./1_2.html");
+                            }
+                            if(lastTopic==="Page 2.1"){
+                                myFn("./2_1.html");
+                            }
+                            if(lastTopic==="Page 2.2"){
+                                myFn("./2_2.html");
+                            }
+                          }
+                          else{
+                            myFn("./index.html #content");
+                          }
+                          
+                      }
+                      else{
+                        if(activity.text==="Main menu" || activity.text==="Start over"){
+                          myFn("./index.html #content");
+                          updateLastTopic('Main menu');
+                        }
+                        if(activity.text==="Page 1"){
+                            myFn("./1_.html");
+                            updateLastTopic('1');
+                        }
+                        if(activity.text==="Page 2"){
+                            myFn("./2_.html");
+                            updateLastTopic('2');
+                        }
+
+                        if(activity.text==="Page 1.1"){
+                            myFn("./1_1.html");
+                            updateLastTopic('1.1');
+                        }
+                        if(activity.text==="Page 1.2"){
+                            myFn("./1_2.html");
+                            updateLastTopic('1.2');
+                        }
+                        if(activity.text==="Page 2.1"){
+                            myFn("./2_1.html");
+                            updateLastTopic('2.1');
+                        }
+                        if(activity.text==="Page 2.2"){
+                            myFn("./2_2.html");
+                            updateLastTopic('2.2');
+                        }
+                      }
+                     
+
+                      
+                          //document.getElementById("btnval").onclick = myFn("1.html") ;
+                }    
+                   if (action.type === "DIRECT_LINE/CONNECT_FULFILLED" && start === 0 && (!localStorage.lastTopic || localStorage.lastTopic == "Main menu")) {
+                      dispatch({
+                          meta: {
+                               method: "keyboard",
+                           },
+                           payload: {
+                               activity: {
+                                     channelData: {
+                                          postBack: true,
+                                     },
+                                      name: 'startConversation',
+                                      type: "event"
+                                      
+                                 },
+                            },
+                            type: "DIRECT_LINE/POST_ACTIVITY",
+                       }); 
+                       start=1;
+                   }
+                  else if (action.type === "DIRECT_LINE/CONNECT_FULFILLED" && start === 0 && localStorage.lastTopic != "Main menu"){
+                    console.log("returning")
+                    dispatch({
+                                meta: {
+                                    method: "keyboard",
+                                },
+                                payload: {
+                                    activity: {
+                                          channelData: {
+                                                postBack: true,
+                                          },
+                                            name: 'selectHome',
+                                            type: "message",
+                                            text:  "returningUser"
+                                            
+                                      },
+                                  },
+                                  type: "DIRECT_LINE/POST_ACTIVITY",
+                            });
+                       start=1;
+                  }
+                   else{
+                    if (action.type === "DIRECT_LINE/CONNECT_FULFILLED") {
+                      if(flag==='Main menu'){
+                            dispatch({
+                                meta: {
+                                    method: "keyboard",
+                                },
+                                payload: {
+                                    activity: {
+                                          channelData: {
+                                                postBack: true,
+                                          },
+                                            name: 'selectHome',
+                                            type: "message",
+                                            text:  "Main menu"
+                                            
+                                      },
+                                  },
+                                  type: "DIRECT_LINE/POST_ACTIVITY",
+                            }); 
+                          }          
+                      if(flag==='1'){
+                        console.log(flag)
+                            dispatch({
+                                meta: {
+                                    method: "keyboard",
+                                },
+                                payload: {
+                                    activity: {
+                                          channelData: {
+                                                postBack: true,
+                                          },
+                                            name: 'selectPage1',
+                                            type: "message",
+                                            text:  "Page 1"
+                                            
+                                      },
+                                  },
+                                  type: "DIRECT_LINE/POST_ACTIVITY",
+                            }); 
+                          }
+
+                          if(flag==='2'){
+                            dispatch({
+                                meta: {
+                                    method: "keyboard",
+                                },
+                                payload: {
+                                    activity: {
+                                          channelData: {
+                                                postBack: true,
+                                          },
+                                            name: 'selectPage2',
+                                            type: "message",
+                                            text:  "Page 2"
+                                            
+                                      },
+                                  },
+                                  type: "DIRECT_LINE/POST_ACTIVITY",
+                            }); 
+                          }
+
+                          if(flag==='1.1'){
+                            dispatch({
+                                meta: {
+                                    method: "keyboard",
+                                },
+                                payload: {
+                                    activity: {
+                                          channelData: {
+                                                postBack: true,
+                                          },
+                                            name: 'selectPage1.1',
+                                            type: "message",
+                                            text:  "Page 1.1"
+                                            
+                                      },
+                                  },
+                                  type: "DIRECT_LINE/POST_ACTIVITY",
+                            }); 
+                          }
+                          if(flag==='1.2'){
+                            dispatch({
+                                meta: {
+                                    method: "keyboard",
+                                },
+                                payload: {
+                                    activity: {
+                                          channelData: {
+                                                postBack: true,
+                                          },
+                                            name: 'selectPage1.2',
+                                            type: "message",
+                                            text:  "Page 1.2"
+                                            
+                                      },
+                                  },
+                                  type: "DIRECT_LINE/POST_ACTIVITY",
+                            }); 
+                          }
+                          if(flag==='2.1'){
+                            dispatch({
+                                meta: {
+                                    method: "keyboard",
+                                },
+                                payload: {
+                                    activity: {
+                                          channelData: {
+                                                postBack: true,
+                                          },
+                                            name: 'selectPage2.1',
+                                            type: "message",
+                                            text:  "Page 2.1"
+                                            
+                                      },
+                                  },
+                                  type: "DIRECT_LINE/POST_ACTIVITY",
+                            }); 
+                          }
+                          if(flag==='2.2'){
+                            dispatch({
+                                meta: {
+                                    method: "keyboard",
+                                },
+                                payload: {
+                                    activity: {
+                                          channelData: {
+                                                postBack: true,
+                                          },
+                                            name: 'selectPage2.2',
+                                            type: "message",
+                                            text:  "Page 2.2"
+                                            
+                                      },
+                                  },
+                                  type: "DIRECT_LINE/POST_ACTIVITY",
+                            }); 
+                          }
+
+                 }
+                   }
+                   // console.log("@@@@@@in if statement")
+                
+              
+                 return next(action);
+              }
+           );
+
+        function function_3(){
+           fetch(theURL)    
+                .then(response => response.json())
+              
+                .then(conversationInfo => {
+                    console.log(conversationInfo)
+                    window.WebChat.renderWebChat(
+                        {                             
+                            directLine: window.WebChat.createDirectLine({
+                                token: conversationInfo.token,
+
+                            }),
+                            store: store,
+                            styleOptions: styleOptions,
+                            sendTypingIndicator: true,
+                            
+                        },
+                        document.getElementById('webchat')
+                    );
+                    conv_id=conversationInfo.conversationId
+                    console.log(conv_id)
+                })
+                .catch(err => console.error("An error occurred: " + err));
+        }
+        function_3()
+        if (!localStorage.lastTopic) {
+            localStorage.lastTopic = "Main menu";
+            }
+        document.getElementById("lastTopic").innerHTML = localStorage.lastTopic;
+        </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</body>
 </html>
